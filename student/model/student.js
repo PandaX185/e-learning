@@ -11,7 +11,6 @@ const studentSchema = new Schema({
     },
     email: {
         type: String,
-        unique: true,
         required: true
     },
     hashedPassword: {
