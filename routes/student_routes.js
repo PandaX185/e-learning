@@ -1,7 +1,17 @@
 import express from "express";
-
 import { signUp } from "../student/controller/student_controller.js";
+import multer from 'multer';
 
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+
+const upload = multer({ storage: storage });
 const router = express.Router();
 
 /**
@@ -47,6 +57,6 @@ const router = express.Router();
  *      500:
  *          description: Internal server error
  */
-router.post("/students/signup", signUp);
+router.post("/students/signup", upload.single('profilePicture'), signUp);
 
 export default router;

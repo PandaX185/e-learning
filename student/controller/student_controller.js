@@ -14,7 +14,11 @@ export async function signUp(req, res) {
         password,
         grade,
         teachers: [teacherId]
-    };      
+    };
+
+    if (req.file) {
+        student.profilePicture = req.file.path;
+    }
 
     try {
         await createStudent(student);
