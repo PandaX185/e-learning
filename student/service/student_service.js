@@ -9,12 +9,13 @@ export async function createStudent(student) {
     if (existingStudent) {
         if (!existingStudent.teachers.includes(student.teacherId)) {
             existingStudent.teachers.push(student.teacherId);
+            existingStudent.updatedAt = Date.now();
             await existingStudent.save();
             return existingStudent;
         } else {
             throw new Error('Student already exists');
         }
-    }       
+    }
 
     return Student.create(student);
 }
