@@ -1,4 +1,4 @@
-class appErorr extends Error {
+class appError extends Error {
   constructor(message, statusCode) {
     super(message);
     this.statusCode = statusCode;
@@ -7,4 +7,4 @@ class appErorr extends Error {
     Error.captureStackTrace(this, this.constructor);
   }
 }
-export default appErorr;
+export default appError;

@@ -1,5 +1,5 @@
 import { Error } from "mongoose";
-import appErorr from "../utils/appError.js"
+import appError from "../utils/appError.js"
 
 /* export default (err, req, res, next) => {
     if (err instanceof Error.ValidationError) {
