@@ -16,10 +16,6 @@ export async function signUp(req, res) {
         teachers: [teacherId]
     };
 
-    if (req.file) {
-        student.profilePicture = req.file.path;
-    }
-
     try {
         await createStudent(student);
     } catch (error) {
