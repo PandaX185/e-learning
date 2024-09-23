@@ -1,5 +1,4 @@
-import { Error } from "mongoose";
-import appError from "../utils/appError.js"
+import appError from "../utils/appError.js";
 
 /* export default (err, req, res, next) => {
     if (err instanceof Error.ValidationError) {
@@ -41,47 +40,47 @@ import appError from "../utils/appError.js"
 }; */
 
 const duplicateError = (error) => {
-  return new appErorr(`the ${JSON.stringify(error.keyValue)} is exist`, 400);
+    return new appError(`the ${JSON.stringify(error.keyValue)} is exist`, 400);
 };
 
-const sendErrorDev = (error, req, res ) => {
-  res.status(error.statusCode).json({
-    status: error.status,
-    message: error.description,
-    error: error,
-    stack: error.stack,
-  });
+const sendErrorDev = (error, res) => {
+    res.status(error.statusCode).json({
+        status: error.status,
+        message: error.description,
+        error: error,
+        stack: error.stack,
+    });
 };
 
-const sendErrorProd = (error, req, res ) => {
-  if (error.isOperational === true) {
-    console.log(error);
-    
-    return res.status(error.statusCode).json({
-      status: false,
-      message: error.message,
-    });
-  } else {
-    return res.status(error.statusCode).json({
-      status: false,
-      message: "Something went wrong!",
-    });
-  }
+const sendErrorProd = (error, res) => {
+    if (error.isOperational === true) {
+        console.log(error);
+
+        return res.status(error.statusCode).json({
+            status: false,
+            message: error.message,
+        });
+    } else {
+        return res.status(error.statusCode).json({
+            status: false,
+            message: "Something went wrong!",
+        });
+    }
 };
 
 export default (error, req, res, next) => {
-  error.statusCode = error.statusCode || 500;
-  error.status = error.status || false;
-  if (process.env.NODE_ENV === "dev") {
-    sendErrorDev(error, req, res);
-  } else if (
-    process.env.NODE_ENV === "production" ||
-    process.env.NODE_ENV === "test"
-  ) {    
-    let err = { ...error };
-    if (err.code === 11000) {
-      err = duplicateError(err);
-    }    
-    sendErrorProd(err, req, res);
-  }
+    error.statusCode = error.statusCode || 500;
+    error.status = error.status || false;
+    if (process.env.NODE_ENV === "dev") {
+        sendErrorDev(error, res);
+    } else if (
+        process.env.NODE_ENV === "production" ||
+        process.env.NODE_ENV === "test"
+    ) {
+        let err = { ...error };
+        if (err.code === 11000) {
+            err = duplicateError(err);
+        }
+        sendErrorProd(err, res);
+    }
 };
