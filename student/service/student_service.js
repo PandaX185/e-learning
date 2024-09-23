@@ -6,7 +6,7 @@ import generateToken from "../../utils/generateToken.js";
 export async function createStudent(student) {
     const hashedPassword = await bcrypt.hash(student.password, 0);
     student.hashedPassword = hashedPassword;
-    const existingStudent = await Student.findOne({ email: student.email });
+    const existingStudent = await Student.findOne({ email: student.email });    
     if (existingStudent) {
         if (!existingStudent.teachers.includes(student.teacherId)) {
             existingStudent.teachers.push(student.teacherId);
@@ -14,10 +14,11 @@ export async function createStudent(student) {
             await existingStudent.save();
             return existingStudent;
         } else {
-            throw new Error('Student already exists');
+            throw new appError('Student already exists' , 400);
         }
     }
-    return Student.create(student);
+    const newStudent =  await Student.create(student);
+    return newStudent;
 }
 
 export async function loginStudent (body  , teacherId){

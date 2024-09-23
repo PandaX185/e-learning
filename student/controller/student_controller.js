@@ -1,35 +1,28 @@
 import { createStudent , loginStudent } from '../service/student_service.js';
 import asyncWrapper from '../../middlewares/asyncWrapper.js'
-export async function signUp(req, res) {
+export const signUp =  asyncWrapper( 
+    async (req, res , next)=> {
     const { firstName, lastName, email, password, grade, teacherId } = req.body;
-
     if (!firstName || !lastName || !email || !password || !grade || !teacherId) {
         return res.status(400).json({ error: 'Please provide all the required fields' });
     }
-
     const student = {
         firstName,
         lastName,
         email,
         password,
         grade,
+        teacherId,
         teachers: [teacherId]
     };
-
-
     if (req.file) {
         student.profilePicture = req.file.path;
     }
-
-    try {
         await createStudent(student);
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: 'Internal server error' });
-    }
-
-    return res.status(200).json({ message: 'Sign-up successful' });
-}
+        return res.status(200).json({status:'success', message: 'Sign-up successful' , data:{
+        student
+    } });
+})
 
 export const login = asyncWrapper(
     async(req ,res , next)=>{
