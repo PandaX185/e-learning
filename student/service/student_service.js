@@ -1,6 +1,7 @@
 import Student from "../model/student.js";
 import bcrypt from 'bcrypt';
 import appErorr from "../../utils/appError.js";
+import generateToken from "../../utils/generateToken.js";
 
 export async function createStudent(student) {
     const hashedPassword = await bcrypt.hash(student.password, 0);
@@ -25,11 +26,19 @@ export async function loginStudent (body  , teacherId){
         teachers:teacherId
     })
     if(!student || !body.password || !body.email){
-        throw new appErorr('Invalid credentials' , 400);
+        throw new appErorr('Invalid Email Or Password' , 400);
     }
     const isMatch = await bcrypt.compare(body.password, student.hashedPassword);
     if(!isMatch){
-        throw new appErorr('Invalid credentials');
+        throw new appErorr('Invalid Email Or Password');
     }
-    return student;
+    let accessToken = await generateToken({
+        id: student._id,
+        email: student.email,
+        role: 'Student'
+    })
+    return {
+        student,
+        accessToken
+    };
 }

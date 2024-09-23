@@ -1,4 +1,3 @@
-import { createStudent } from '../service/student_service.js';
 import { createStudent , loginStudent } from '../service/student_service.js';
 import asyncWrapper from '../../middlewares/asyncWrapper.js'
 export async function signUp(req, res) {
@@ -39,9 +38,14 @@ export const login = asyncWrapper(
             status: 'Success',
             message:'Login successful',
             data:{
-                student
+                ...student
             }
         })
     }
 )
 
+export const checkJwt = asyncWrapper(
+    async(req , res , next)=>{
+        res.status(200).json({message:'Jwt Working... '})
+    }
+)

@@ -1,6 +1,7 @@
 import express from "express";
-import { signUp , login} from "../student/controller/student_controller.js";
+import { signUp , login , checkJwt} from "../student/controller/student_controller.js";
 import multer from 'multer';
+import verifyToken from "../middlewares/verifyToken.js";
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -87,4 +88,7 @@ router.post("/students/signup", upload.single('profilePicture'), signUp);
  *          description: Internal server error
  */
 router.post("/students/login/:teacher", login)
+
+// for test jwt token
+router.get('/Testjwt' , verifyToken ,checkJwt)
 export default router;
