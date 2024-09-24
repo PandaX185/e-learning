@@ -43,3 +43,10 @@ export async function loginStudent (body  , teacherId){
         accessToken
     };
 }
+export async function updateStudent(body , id) {
+    const updatedStudent = await Student.findByIdAndUpdate(id, {$set:{...body} } , {new: true , runValidators:true});
+    if(!updatedStudent){
+        throw new appError('Student not found', 404);
+    }
+    return updatedStudent;
+}

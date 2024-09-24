@@ -37,7 +37,7 @@ const studentSchema = new Schema({
         type: Date,
         default: Date.now
     }
-});
+},{timestamps: true});
 
 const Student = model('Student', studentSchema);
 
