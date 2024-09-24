@@ -1,8 +1,14 @@
 import express from "express";
-import { signUp } from "../student/controller/student_controller.js";
+import {
+    signUp,
+    login,
+    checkJwt,
+} from "../student/controller/student_controller.js";
 import multer from "multer";
+import verifyToken from "../middlewares/verifyToken.js";
 import { signupSchema, signinSchame } from "../validation/student.schema.js";
 import validate from "../middlewares/validation.js";
+import { sginIn } from "../teacher/controllers/teacher_controller.js";
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, "uploads/");
@@ -59,10 +65,43 @@ const router = express.Router();
  *          description: Internal server error
  */
 router.post(
-    "/signup",
+    "/students/signup",
     upload.single("profilePicture"),
     validate(signupSchema),
     signUp
 );
 
+/**
+ * @swagger
+ * /students/login/:teacher:
+ *  post:
+ *   summary: Login a Student
+ *   description: Login a student
+ *   requestBody:
+ *    content:
+ *      application/json:
+ *        schema:
+ *          type: object
+ *          properties:
+ *            email:
+ *              type: string
+ *            password:
+ *              type: string
+ *          required:
+ *           - email
+ *           - password
+ *  responses:
+ *      200:
+ *          description: Login successful
+ *      400:
+ *          description: Please provide all the required fields
+ *      500:
+ *          description: Internal server error
+ */
+router.post("/students/login/:teacher", validate(signinSchame), login);
+router.post("/teacher/login", validate(signinSchame), sginIn);
+
+
+// for test jwt token
+router.get("/Testjwt", verifyToken, checkJwt);
 export default router;

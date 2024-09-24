@@ -1,12 +1,11 @@
 import express from "express";
 
-//import db from './config/db.js';
+import db from "./config/db.js";
 import router from "./routes/student_routes.js";
 import dotenv from "dotenv";
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerSpec from "./config/swagger.js";
 import cors from "cors";
-import TeacherRouter from "./routes/teacher_routes.js";
 import errorHandler from "./middlewares/errorHandler.js";
 dotenv.config({ path: "./config.env" });
 
@@ -23,8 +22,10 @@ app.use(
     swaggerUiExpress.setup(swaggerSpec)
 );
 
-app.use("/api/student", router);
-app.use("/api/teacher", TeacherRouter);
+app.use("/api", router);
 app.use(errorHandler);
 
-export default app;
+const port = process.env.API_PORT;
+app.listen(port, () => {
+    console.log(`Server listening at http://localhost:${port}`);
+});
