@@ -25,7 +25,7 @@ app.use(
 app.use("/api", router);
 app.use(errorHandler);
 
-const port = process.env.API_PORT;
+const port = process.env.PORT;
 app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`);
 });
