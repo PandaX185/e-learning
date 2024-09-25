@@ -166,6 +166,32 @@ router.put(
     update
 );
 
+/**
+ * @swagger
+ * /teacher/login:
+ *  post:
+ *   summary: login a teacher
+ *   description: login a teacher
+ *   requestBody:
+ *    content:
+ *      application/json:
+ *        schema:
+ *          type: object
+ *          properties:
+ *            email:
+ *              type: string
+ *            password:
+ *              type: string
+ *  responses:
+ *      200:
+ *          description: Login successful
+ *      400:
+ *          description: Please provide all the required fields
+ *      500:
+ *          description: Internal server error
+ */
+router.post("/teacher/login", validate(signinSchame), sginIn);
+
 // for test jwt token
 router.get("/Testjwt", verifyToken, checkJwt);
 export { router };
