@@ -4,6 +4,7 @@ import {
     updateStudent,
 } from "../service/student_service.js";
 import asyncWrapper from "../../middlewares/asyncWrapper.js";
+
 export const signUp = asyncWrapper(async (req, res, next) => {
     const { firstName, lastName, email, password, grade, teacherId } = req.body;
     if (
@@ -26,16 +27,14 @@ export const signUp = asyncWrapper(async (req, res, next) => {
         grade,
         teacherId,
         teachers: [teacherId],
+        profilePicture: process.env.DEFAULT_PFP_URL,
     };
-    if (req.file) {
-        student.profilePicture = req.file.path;
-    }
-    await createStudent(student);
+
+    const result = await createStudent(student);
+    delete result._doc.hashedPassword;
     return res.status(200).json({
-        status: "success",
-        message: "Sign-up successful",
         data: {
-            student,
+            result,
         },
     });
 });

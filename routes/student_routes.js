@@ -2,10 +2,9 @@ import express from "express";
 import {
     signUp,
     login,
-    checkJwt,
     update,
+    checkJwt,
 } from "../student/controller/student_controller.js";
-import multer from "multer";
 import verifyToken from "../middlewares/verifyToken.js";
 import {
     signupSchema,
@@ -13,17 +12,7 @@ import {
     updateStudentSchema,
 } from "../validation/student.schema.js";
 import validate from "../middlewares/validation.js";
-import { sginIn } from "../teacher/controllers/teacher_controller.js";
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "uploads/");
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + "-" + file.originalname);
-    },
-});
 
-const upload = multer({ storage: storage });
 const router = express.Router();
 
 /**
@@ -44,16 +33,14 @@ const router = express.Router();
  *              type: string
  *            email:
  *              type: string
+ *              format: email
  *            password:
  *              type: string
  *            grade:
- *             type: number
- *             format: int32
- *            profilePicture:
- *             type: string
- *             format: binary
+ *              type: number
+ *              format: int32
  *            teacherId:
- *             type: string
+ *              type: string
  *          required:
  *           - firstName
  *           - lastName
@@ -61,20 +48,47 @@ const router = express.Router();
  *           - password
  *           - grade
  *           - teacherId
- *  responses:
+ *   responses:
  *      200:
- *          description: Sign-up successful
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    _id:
+ *                      type: string
+ *                    firstName:
+ *                      type: string
+ *                    lastName:
+ *                      type: string
+ *                    email:
+ *                      type: string
+ *                      format: email
+ *                    grade:
+ *                      type: number
+ *                      format: int32
+ *                    teachers:
+ *                      type: array
+ *                      items:
+ *                          type: string
+ *                    profilePicture:
+ *                      type: string
+ *                      format: binary
+ *                    createdAt:
+ *                      type: string
+ *                      format: date-time
+ *                    updatedAt:
+ *                      type: string
+ *                      format: date-time
  *      400:
  *          description: Please provide all the required fields
  *      500:
  *          description: Internal server error
  */
-router.post(
-    "/students/signup",
-    upload.single("profilePicture"),
-    validate(signupSchema),
-    signUp
-);
+router.post("/students/signup", validate(signupSchema), signUp);
 
 /**
  * @swagger
@@ -152,32 +166,6 @@ router.put(
     update
 );
 
-/**
- * @swagger
- * /teacher/login:
- *  post:
- *   summary: login a teacher
- *   description: login a teacher
- *   requestBody:
- *    content:
- *      application/json:
- *        schema:
- *          type: object
- *          properties:
- *            email:
- *              type: string
- *            password:
- *              type: string
- *  responses:
- *      200:
- *          description: Login successful
- *      400:
- *          description: Please provide all the required fields
- *      500:
- *          description: Internal server error
- */
-router.post("/teacher/login", validate(signinSchame), sginIn);
-
 // for test jwt token
 router.get("/Testjwt", verifyToken, checkJwt);
-export default router;
+export { router };

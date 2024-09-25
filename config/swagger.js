@@ -9,8 +9,8 @@ const swaggerDefinition = {
     },
     servers: [
         {
-            URL: 'http://localhost:3000',
-            description: 'Local server',
+            url: 'https://elms-dev-0fa19fc2d912.herokuapp.com',
+            description: 'Development server',
         },
     ],
 };
