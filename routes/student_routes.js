@@ -1,19 +1,9 @@
 import express from "express";
-import { signUp , login , checkJwt , update} from "../student/controller/student_controller.js";
-import multer from 'multer';
+import { signUp, login, checkJwt } from "../student/controller/student_controller.js";
 import verifyToken from "../middlewares/verifyToken.js";
-import { signupSchema , signinSchame , updateStudentSchema } from "../validation/student.schema.js";
+import { signupSchema, signinSchame } from "../validation/student.schema.js";
 import validate from "../middlewares/validation.js";
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname);
-    }
-});
 
-const upload = multer({ storage: storage });
 const router = express.Router();
 
 /**
@@ -59,7 +49,7 @@ const router = express.Router();
  *      500:
  *          description: Internal server error
  */
-router.post("/students/signup", upload.single('profilePicture'), validate(signupSchema), signUp);
+router.post("/students/signup", validate(signupSchema), signUp);
 
 /**
  * @swagger
@@ -133,5 +123,5 @@ router.post("/students/login/:teacher", validate(signinSchame), login);
 router.put("/students/update-student/:id" , verifyToken ,validate(updateStudentSchema) , update);
 
 // for test jwt token
-router.get('/Testjwt' , verifyToken ,checkJwt)
+router.get('/Testjwt', verifyToken, checkJwt)
 export default router;
