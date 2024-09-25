@@ -55,3 +55,6 @@ export const updateStudentSchema = new Joi.object({
     }),
     id:Joi.string().required()
 })
+export const updatePhotoSchema = new Joi.object({
+    profilePicture: Joi.string().required()
+})
