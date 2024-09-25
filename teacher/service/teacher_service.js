@@ -24,6 +24,8 @@ export async function LoginTeacher(body, res, next) {
     if (!(await bcrypt.compare(password, user.hashedPassword))) {
         throw new appError("invaild email or password", 401);
     }
+
+    delete user._doc.hashedPassword;
     const Token = await generateToken(user.id);
     return {
         Token,

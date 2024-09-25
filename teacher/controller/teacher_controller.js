@@ -1,5 +1,6 @@
 import asyncWrapper from "../../middlewares/asyncWrapper.js";
 import { createTeacher } from "../service/teacher_service.js";
+import { LoginTeacher } from "../service/teacher_service.js";
 
 export const signUp = asyncWrapper(async (req, res, next) => {
     const { firstName, lastName, email, password } = req.body;
@@ -20,7 +21,7 @@ export const signUp = asyncWrapper(async (req, res, next) => {
     });
 });
 
-export const sginIn = asyncWrapper(async (req, res, next) => {
+export const signIn = asyncWrapper(async (req, res, next) => {
     const { Token, user } = await LoginTeacher(req.body, res, next);
     res.status(200).json({
         status: "success",
