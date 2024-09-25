@@ -19,8 +19,10 @@ export const signUp = asyncWrapper(
         };
 
         const result = await createStudent(student);
+        delete result._doc.hashedPassword;
         return res.status(200).json({
-            status: 'success', message: 'Sign-up successful', data: {
+            message: 'Sign-up successful',
+                data: {
                 result
             }
         });

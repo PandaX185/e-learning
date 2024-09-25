@@ -124,4 +124,4 @@ router.put("/students/update-student/:id" , verifyToken ,validate(updateStudentS
 
 // for test jwt token
 router.get('/Testjwt', verifyToken, checkJwt)
-export default router;
+export { router };
