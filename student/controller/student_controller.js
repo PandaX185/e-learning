@@ -1,4 +1,4 @@
-import { createStudent , loginStudent } from '../service/student_service.js';
+import { createStudent , loginStudent , updateStudent} from '../service/student_service.js';
 import asyncWrapper from '../../middlewares/asyncWrapper.js'
 export const signUp =  asyncWrapper( 
     async (req, res , next)=> {
@@ -36,7 +36,19 @@ export const login = asyncWrapper(
         })
     }
 )
-
+export const update = asyncWrapper(
+    async(req , res , next)=>{
+        const id = req.params.id;
+        const student = await updateStudent(req.body , id);
+        res.status(200).json({
+            status: 'Success',
+            message:'Student updated successfully',
+            data:{
+                student
+            }
+        })
+    }
+)
 export const checkJwt = asyncWrapper(
     async(req , res , next)=>{
         res.status(200).json({message:'Jwt Working... '})

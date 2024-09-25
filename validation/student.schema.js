@@ -40,3 +40,18 @@ export const signinSchame = new Joi.object({
         "string.empty": "Password is required",
     }),
 }).unknown(true);
+
+export const updateStudentSchema = new Joi.object({
+    firstName: Joi.string().max(30).pattern(new RegExp(/^[a-zA-Z0-9äöüÄÖÜ]*$/)).messages({
+        "string.max": "First name must be less than or equal to 30 characters",
+        "string.pattern.base":"Text Musn't Contain Specail Chars"
+    }),
+    lastName: Joi.string().max(30).pattern(new RegExp(/^[a-zA-Z0-9äöüÄÖÜ]*$/)).messages({
+        "string.max": "Last name must be less than or equal to 15 characters",
+        "string.pattern.base":"Text Musn't Contain Specail Chars"
+    }),
+    grade: Joi.number().messages({
+        "number.empty": "Grade is required",
+    }),
+    id:Joi.string().required()
+})
