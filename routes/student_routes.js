@@ -217,6 +217,7 @@ router.put(
  */
 /* router.post("/teacher/login", validate(signinSchame), sginIn);
  */
+
 // for test jwt token
 router.get("/Testjwt", verifyToken, checkJwt);
 export { router };

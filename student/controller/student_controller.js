@@ -54,8 +54,6 @@ export const update = asyncWrapper(async (req, res, next) => {
     const id = req.params.id;
     const student = await updateStudent(req.body, id);
     res.status(200).json({
-        status: "Success",
-        message: "Student updated successfully",
         data: {
             student,
         },
