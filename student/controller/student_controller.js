@@ -1,56 +1,59 @@
-import { createStudent , loginStudent , updateStudent} from '../service/student_service.js';
+import { createStudent, loginStudent, updateStudent } from '../service/student_service.js';
 import asyncWrapper from '../../middlewares/asyncWrapper.js'
-export const signUp =  asyncWrapper( 
-    async (req, res , next)=> {
-    const { firstName, lastName, email, password, grade, teacherId } = req.body;
-    if (!firstName || !lastName || !email || !password || !grade || !teacherId) {
-        return res.status(400).json({ error: 'Please provide all the required fields' });
-    }
-    const student = {
-        firstName,
-        lastName,
-        email,
-        password,
-        grade,
-        teacherId,
-        teachers: [teacherId]
-    };
-    if (req.file) {
-        student.profilePicture = req.file.path;
-    }
-        await createStudent(student);
-        return res.status(200).json({status:'success', message: 'Sign-up successful' , data:{
-        student
-    } });
-})
+
+export const signUp = asyncWrapper(
+    async (req, res, next) => {
+        const { firstName, lastName, email, password, grade, teacherId } = req.body;
+        if (!firstName || !lastName || !email || !password || !grade || !teacherId) {
+            return res.status(400).json({ error: 'Please provide all the required fields' });
+        }
+        const student = {
+            firstName,
+            lastName,
+            email,
+            password,
+            grade,
+            teacherId,
+            teachers: [teacherId],
+            profilePicture: process.env.DEFAULT_PFP_URL
+        };
+
+        const result = await createStudent(student);
+        delete result._doc.hashedPassword;
+        return res.status(200).json({
+            data: {
+                result
+            }
+        });
+    })
 
 export const login = asyncWrapper(
-    async(req ,res , next)=>{
-        const student = await loginStudent(req.body , req.params.teacher);
+    async (req, res, next) => {
+        const student = await loginStudent(req.body, req.params.teacher);
         res.status(200).json({
             status: 'Success',
-            message:'Login successful',
-            data:{
+            message: 'Login successful',
+            data: {
                 ...student
             }
         })
     }
 )
 export const update = asyncWrapper(
-    async(req , res , next)=>{
+    async (req, res, next) => {
         const id = req.params.id;
-        const student = await updateStudent(req.body , id);
+        const student = await updateStudent(req.body, id);
         res.status(200).json({
             status: 'Success',
-            message:'Student updated successfully',
-            data:{
+            message: 'Student updated successfully',
+            data: {
                 student
             }
         })
     }
 )
 export const checkJwt = asyncWrapper(
-    async(req , res , next)=>{
-        res.status(200).json({message:'Jwt Working... '})
+    async (req, res, next) => {
+        res.status(200).json({ message: 'Jwt Working... ' })
     }
 )

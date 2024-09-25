@@ -1,0 +1,68 @@
+import express from "express";
+import { signUp } from "../teacher/controller/teacher_controller.js";
+import validate from "../middlewares/validation.js";
+import { signupSchema } from "../validation/teacher.schema.js";
+
+const router = express.Router();
+
+/**
+ * @swagger
+ * /teacher/signup:
+ *  post:
+ *   summary: Sign up a teacher
+ *   description: Sign up a teacher
+ *   requestBody:
+ *    content:
+ *      application/json:
+ *        schema:
+ *          type: object
+ *          properties:
+ *            firstName:
+ *              type: string
+ *            lastName:
+ *              type: string
+ *            email:
+ *              type: string
+ *            password:
+ *              type: string
+ *          required: 
+ *           - firstName
+ *           - lastName
+ *           - email
+ *           - password
+ *   responses:
+ *      200:
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    _id:
+ *                      type: string
+ *                    firstName:
+ *                      type: string
+ *                    lastName:
+ *                      type: string
+ *                    email:
+ *                      type: string
+ *                      format: email
+ *                    profilePicture:
+ *                      type: string
+ *                      format: binary
+ *                    createdAt:
+ *                      type: string
+ *                      format: date-time
+ *                    updatedAt:
+ *                      type: string
+ *                      format: date-time
+ *      400:
+ *          description: Please provide all the required fields
+ *      500:
+ *          description: Internal server error
+ */
+router.post("/teachers/signup", validate(signupSchema), signUp);
+
+export { router };
