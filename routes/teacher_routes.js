@@ -1,7 +1,7 @@
 import express from "express";
-import { signUp } from "../teacher/controller/teacher_controller.js";
+import { sginIn, signUp } from "../teacher/controller/teacher_controller.js";
 import validate from "../middlewares/validation.js";
-import { signupSchema } from "../validation/teacher.schema.js";
+import { LoginSchame, signupSchema } from "../validation/teacher.schema.js";
 
 const router = express.Router();
 
@@ -25,7 +25,7 @@ const router = express.Router();
  *              type: string
  *            password:
  *              type: string
- *          required: 
+ *          required:
  *           - firstName
  *           - lastName
  *           - email
@@ -64,5 +64,59 @@ const router = express.Router();
  *          description: Internal server error
  */
 router.post("/teachers/signup", validate(signupSchema), signUp);
+
+/**
+ * @swagger
+ * /teacher/signup:
+ *  post:
+ *   summary: Log in a teacher
+ *   description: Log in a teacher
+ *   requestBody:
+ *    content:
+ *      application/json:
+ *        schema:
+ *          type: object
+ *          properties:
+ *            email:
+ *              type: string
+ *            password:
+ *              type: string
+ *          required:
+ *           - email
+ *           - password
+ *   responses:
+ *      200:
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    _id:
+ *                      type: string
+ *                    firstName:
+ *                      type: string
+ *                    lastName:
+ *                      type: string
+ *                    email:
+ *                      type: string
+ *                      format: email
+ *                    profilePicture:
+ *                      type: string
+ *                      format: binary
+ *                    createdAt:
+ *                      type: string
+ *                      format: date-time
+ *                    updatedAt:
+ *                      type: string
+ *                      format: date-time
+ *      400:
+ *          description: Please provide all the required fields
+ *      500:
+ *          description: Internal server error
+ */
+router.post("/teachers/signup", validate(LoginSchame), sginIn);
 
 export { router };
