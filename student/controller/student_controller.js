@@ -2,6 +2,7 @@ import {
     createStudent,
     loginStudent,
     updateStudent,
+    updateStudentPhoto
 } from "../service/student_service.js";
 import asyncWrapper from "../../middlewares/asyncWrapper.js";
 
@@ -58,6 +59,17 @@ export const update = asyncWrapper(async (req, res, next) => {
         },
     });
 });
+export const updatePhote = asyncWrapper(
+    async(req , res ,next)=>{
+        const id = req.params.id;
+        const student = await updateStudentPhoto(req.file, id);
+        res.status(200).json({
+            data: {
+                student,
+            },
+        });
+    }
+)
 export const checkJwt = asyncWrapper(async (req, res, next) => {
     res.status(200).json({ message: "Jwt Working... " });
 });

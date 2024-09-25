@@ -13,7 +13,6 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use(errorHandler);
 
 app.get("/", (req, res) => {
     res.json({ message: "API is running..." });
@@ -26,6 +25,7 @@ app.use(
 
 app.use("/api", studentRouter);
 app.use("/api", teacherRouter);
+app.use(errorHandler);
 
 const port = process.env.PORT;
 app.listen(port, () => {
