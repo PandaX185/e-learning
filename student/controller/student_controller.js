@@ -1,4 +1,4 @@
-import { createStudent , loginStudent , updateStudent} from '../service/student_service.js';
+import { createStudent, loginStudent, updateStudent } from '../service/student_service.js';
 import asyncWrapper from '../../middlewares/asyncWrapper.js'
 
 export const signUp = asyncWrapper(
@@ -21,8 +21,7 @@ export const signUp = asyncWrapper(
         const result = await createStudent(student);
         delete result._doc.hashedPassword;
         return res.status(200).json({
-            message: 'Sign-up successful',
-                data: {
+            data: {
                 result
             }
         });
@@ -41,13 +40,13 @@ export const login = asyncWrapper(
     }
 )
 export const update = asyncWrapper(
-    async(req , res , next)=>{
+    async (req, res, next) => {
         const id = req.params.id;
-        const student = await updateStudent(req.body , id);
+        const student = await updateStudent(req.body, id);
         res.status(200).json({
             status: 'Success',
-            message:'Student updated successfully',
-            data:{
+            message: 'Student updated successfully',
+            data: {
                 student
             }
         })
