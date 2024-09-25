@@ -1,7 +1,23 @@
-import { createStudent, loginStudent } from "../service/student_service.js";
+import {
+    createStudent,
+    loginStudent,
+    updateStudent,
+} from "../service/student_service.js";
 import asyncWrapper from "../../middlewares/asyncWrapper.js";
 export const signUp = asyncWrapper(async (req, res, next) => {
     const { firstName, lastName, email, password, grade, teacherId } = req.body;
+    if (
+        !firstName ||
+        !lastName ||
+        !email ||
+        !password ||
+        !grade ||
+        !teacherId
+    ) {
+        return res
+            .status(400)
+            .json({ error: "Please provide all the required fields" });
+    }
     const student = {
         firstName,
         lastName,
@@ -34,7 +50,17 @@ export const login = asyncWrapper(async (req, res, next) => {
         },
     });
 });
-
+export const update = asyncWrapper(async (req, res, next) => {
+    const id = req.params.id;
+    const student = await updateStudent(req.body, id);
+    res.status(200).json({
+        status: "Success",
+        message: "Student updated successfully",
+        data: {
+            student,
+        },
+    });
+});
 export const checkJwt = asyncWrapper(async (req, res, next) => {
     res.status(200).json({ message: "Jwt Working... " });
 });
