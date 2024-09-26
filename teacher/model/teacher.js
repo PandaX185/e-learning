@@ -15,7 +15,7 @@ const TeacherSchema = new Schema(
             type: String,
             required: true,
         },
-        hashedPassword: {
+        password: {
             type: String,
             required: true,
             select: false,
@@ -31,7 +31,7 @@ TeacherSchema.pre("save", async function (next) {
     if (this.isModified("password") && !this.isNew) {
         return next();
     }
-    this.hashedPassword = await bcrypt.hash(this.hashedPassword, 8);
+    this.password = await bcrypt.hash(this.password, 8);
     next();
 });
 

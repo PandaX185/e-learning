@@ -46,7 +46,7 @@ const duplicateError = (error) => {
 const sendErrorDev = (error, res) => {
     res.status(error.statusCode).json({
         status: error.status,
-        message: error.description,
+        message: error.message,
         error: error,
         stack: error.stack,
     });
@@ -55,7 +55,6 @@ const sendErrorDev = (error, res) => {
 const sendErrorProd = (error, res) => {
     if (error.isOperational === true) {
         console.log(error);
-
         return res.status(error.statusCode).json({
             status: false,
             message: error.message,

@@ -25,9 +25,12 @@ app.use(
 
 app.use("/api", studentRouter);
 app.use("/api", teacherRouter);
+
 app.use(errorHandler);
 
-const port = process.env.PORT;
-app.listen(port, () => {
+const port = process.env.API_PORT;
+const server = app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`);
 });
+
+export default server;
