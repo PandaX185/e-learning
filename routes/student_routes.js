@@ -5,7 +5,8 @@ import {
     update,
     checkJwt,
     updatePhote,
-    forgotStudentPasswordHandler
+    forgotStudentPasswordHandler,
+    resetStudentPasswordHandler
 } from "../student/controller/student_controller.js";
 import verifyToken from "../middlewares/verifyToken.js";
 import {
@@ -194,5 +195,6 @@ router.put(
 )
 
 router.post("/students/forgot-password", forgotStudentPasswordHandler)
+router.post("/students/reset-password", resetStudentPasswordHandler)
 
 export { router };

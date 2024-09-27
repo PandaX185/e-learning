@@ -89,3 +89,30 @@ export async function forgotStudentPassword(email) {
         throw new appError('Error sending email', 500);
     }
 }
+
+export async function resetStudentPassword(body) {
+    const { email, otp, password } = body;
+
+    const student = await Student.findOne({ email });
+    if (!student) {
+        throw new appError('Student not registered', 404);
+    }
+
+    if (!await bcrypt.compare(otp, student.otp)) {
+        throw new appError('Invalid OTP', 400);
+    }
+
+    const otpExpirationTime = 3 * 60 * 1000;
+    const currentTime = Date.now();
+    if (currentTime - student.updatedAt > otpExpirationTime) {
+        throw new appError('OTP has expired', 400);
+    }
+
+    student.hashedPassword = await bcrypt.hash(password, 10);
+    student.otp = undefined;
+    await student.save();
+
+    return {
+        message: 'Password reset successfully'
+    };
+}

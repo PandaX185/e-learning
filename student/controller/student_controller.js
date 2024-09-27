@@ -2,6 +2,7 @@ import {
     createStudent,
     forgotStudentPassword,
     loginStudent,
+    resetStudentPassword,
     updateStudent,
     updateStudentPhoto
 } from "../service/student_service.js";
@@ -88,11 +89,19 @@ export const forgotStudentPasswordHandler = asyncWrapper(async (req, res, next) 
             },
         });
     } catch (error) {
-        if (error.statusCode === 404) {
-            return res.status(400).json({ error: error.message });
-        }
-        if (error.statusCode === 500) {
-            return res.status(500).json({ error: error.message });
-        }
+        return res.status(error.statusCode).json({ error: error.message });
+    }
+});
+
+export const resetStudentPasswordHandler = asyncWrapper(async (req, res, next) => {
+    try {
+        const result = await resetStudentPassword(req.body);
+        res.status(200).json({
+            data: {
+                result,
+            },
+        });
+    } catch (error) {
+        return res.status(error.statusCode).json({ error: error.message });
     }
 });
