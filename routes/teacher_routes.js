@@ -1,7 +1,7 @@
 import express from "express";
-import { signIn, signUp } from "../teacher/controller/teacher_controller.js";
+import { signIn, signUp, forgotTeacherPasswordHandler, resetTeacherPasswordHandler } from "../teacher/controller/teacher_controller.js";
 import validate from "../middlewares/validation.js";
-import { LoginSchame, signupSchema } from "../validation/teacher.schema.js";
+import { forgotPasswordSchema, LoginSchame, resetPasswordSchema, signupSchema } from "../validation/teacher.schema.js";
 
 const router = express.Router();
 
@@ -114,6 +114,68 @@ router.post("/teachers/signup", validate(signupSchema), signUp);
  *      500:
  *          description: Internal server error
  */
-router.post("/teacher/login", validate(LoginSchame), signIn);
+router.post("/teachers/login", validate(LoginSchame), signIn);
+
+
+/**
+ * @swagger
+ * /teachers/forgot-password:
+ *  post:
+ *   summary: forgot password
+ *   description: forgot password for the student
+ *   requestBody:
+ *    content:
+ *      application/json:
+ *        schema:
+ *          type: object
+ *          properties:
+ *            email:
+ *              type: string
+ *   responses:
+ *      200:
+ *         content:
+ *             application/json:
+ *                schema:
+ *                   type: object
+ *                   properties:
+ *                     message:
+ *                      type: string
+ *      500:
+ *          description: Internal server error
+ */
+router.post("/teachers/forgot-password", validate(forgotPasswordSchema), forgotTeacherPasswordHandler)
+
+
+/**
+ * @swagger
+ * /teachers/reset-password:
+ *  post:
+ *   summary: reset password
+ *   description: reset password for the student
+ *   requestBody:
+ *    content:
+ *      application/json:
+ *        schema:
+ *          type: object
+ *          properties:
+ *            email:
+ *              type: string
+ *            otp:
+ *              type: string
+ *            password:
+ *              type: string
+ *   responses:
+ *      200:
+ *         content:
+ *             application/json:
+ *                schema:
+ *                   type: object
+ *                   properties:
+ *                     message:
+ *                      type: string
+ *      500:
+ *          description: Internal server error
+ */
+router.post("/teachers/reset-password", validate(resetPasswordSchema), resetTeacherPasswordHandler)
 
 export { router };
