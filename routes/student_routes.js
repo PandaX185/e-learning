@@ -4,7 +4,8 @@ import {
     login,
     update,
     checkJwt,
-    updatePhote
+    updatePhote,
+    forgotStudentPasswordHandler
 } from "../student/controller/student_controller.js";
 import verifyToken from "../middlewares/verifyToken.js";
 import {
@@ -13,13 +14,13 @@ import {
     updateStudentSchema,
 } from "../validation/student.schema.js";
 import validate from "../middlewares/validation.js";
-import {v4} from "uuid";
+import { v4 } from "uuid";
 import multer from "multer";
 import appError from "../utils/appError.js";
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-    cb(null, 'uploads/');
+        cb(null, 'uploads/');
     },
     filename: function (req, file, cb) {
         cb(null, `${v4()}-${Date.now()}${file.originalname}`);
@@ -28,11 +29,11 @@ const storage = multer.diskStorage({
 const fileFilter = (req, file, cb) => {
     const imageType = file.mimetype.split("/")[0];
     const size = file.size;
-    if (imageType === "image" && size <=50000) {
-      return cb(null, true);
+    if (imageType === "image" && size <= 50000) {
+        return cb(null, true);
     } else return cb(new appError("unSupported File Type or exceed max size 5mb", 400), false);
-  };
-const upload = multer({ storage: storage , fileFilter:fileFilter });
+};
+const upload = multer({ storage: storage, fileFilter: fileFilter });
 const router = express.Router();
 
 /**
@@ -191,33 +192,7 @@ router.put(
     upload.single('profilePicture'),
     updatePhote
 )
-/**
- * @swagger
- * /teacher/login:
- *  post:
- *   summary: login a teacher
- *   description: login a teacher
- *   requestBody:
- *    content:
- *      application/json:
- *        schema:
- *          type: object
- *          properties:
- *            email:
- *              type: string
- *            password:
- *              type: string
- *  responses:
- *      200:
- *          description: Login successful
- *      400:
- *          description: Please provide all the required fields
- *      500:
- *          description: Internal server error
- */
-/* router.post("/teacher/login", validate(signinSchame), sginIn);
- */
 
-// for test jwt token
-router.get("/Testjwt", verifyToken, checkJwt);
+router.post("/students/forgot-password", forgotStudentPasswordHandler)
+
 export { router };

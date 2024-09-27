@@ -1,5 +1,6 @@
 import {
     createStudent,
+    forgotStudentPassword,
     loginStudent,
     updateStudent,
     updateStudentPhoto
@@ -50,6 +51,7 @@ export const login = asyncWrapper(async (req, res, next) => {
         },
     });
 });
+
 export const update = asyncWrapper(async (req, res, next) => {
     const id = req.params.id;
     const student = await updateStudent(req.body, id);
@@ -59,8 +61,9 @@ export const update = asyncWrapper(async (req, res, next) => {
         },
     });
 });
+
 export const updatePhote = asyncWrapper(
-    async(req , res ,next)=>{
+    async (req, res, next) => {
         const id = req.params.id;
         const student = await updateStudentPhoto(req.file, id);
         res.status(200).json({
@@ -70,6 +73,26 @@ export const updatePhote = asyncWrapper(
         });
     }
 )
+
 export const checkJwt = asyncWrapper(async (req, res, next) => {
     res.status(200).json({ message: "Jwt Working... " });
+});
+
+export const forgotStudentPasswordHandler = asyncWrapper(async (req, res, next) => {
+    const email = req.body.email;
+    try {
+        const result = await forgotStudentPassword(email);
+        res.status(200).json({
+            data: {
+                result,
+            },
+        });
+    } catch (error) {
+        if (error.statusCode === 404) {
+            return res.status(400).json({ error: error.message });
+        }
+        if (error.statusCode === 500) {
+            return res.status(500).json({ error: error.message });
+        }
+    }
 });
