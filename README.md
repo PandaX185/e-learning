@@ -6,12 +6,7 @@ E-Learning Management System
 
 ## Email Service Provider
 
-We have chosen **SendGrid** as our email service provider for the following reasons:
-
-- Professional branding and customization options for emails.
-- Higher deliverability rate and advanced features like analytics and tracking.
-- Free tier covers up to 100 emails per day, which is sufficient for our current scale.
-- Easily scalable when the app grows, with paid plans that offer more flexibility.
+We have chosen **SMTP (Zoho)** as our email service provider for now. It provides simple setup because it uses smtp while also being able to send suitable amount of daily emails for now. In case of scalability, we can use **SendGrid** with a custom domain email.
 
 ### Sending OTPs
 

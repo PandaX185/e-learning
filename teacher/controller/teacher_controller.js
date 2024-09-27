@@ -41,7 +41,6 @@ export const forgotTeacherPasswordHandler = asyncWrapper(async (req, res, next) 
             },
         });
     } catch (error) {
-
         return res.status(error.statusCode).json({ error: error.message });
     }
 });

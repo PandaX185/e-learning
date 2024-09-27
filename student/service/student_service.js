@@ -2,9 +2,10 @@ import Student from "../model/student.js";
 import bcrypt from 'bcrypt';
 import appError from "../../utils/appError.js";
 import generateToken from "../../utils/generateToken.js";
-import sgMail from "@sendgrid/mail";
 import crypto from 'crypto';
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+dotenv.config();
 
 export async function createStudent(student) {
     const hashedPassword = await bcrypt.hash(student.password, 0);
@@ -74,13 +75,25 @@ export async function forgotStudentPassword(email) {
         existingStudent.otp = await bcrypt.hash(otp, 10);
         await existingStudent.save();
 
-        const message = {
-            from: process.env.SENDGRID_EMAIL,
+        const transporter = nodemailer.createTransport({
+            host: process.env.SMTP_HOST,
+            port: process.env.SMTP_PORT,
+            secure: true,
+            auth: {
+                user: process.env.SMTP_USER,
+                pass: process.env.SMTP_PASS,
+            },
+        });
+
+        const mailOptions = {
+            from: '"E Learning" <no-reply-elms@zohomail.com>',
             to: email,
             subject: 'Password Reset OTP',
-            text: `Your OTP is ${otp}. It will expire in 3 minutes`
-        }
-        await sgMail.send(message);
+            text: `Your OTP is ${otp}. It will expire in 3 minutes`,
+            html: `Your OTP is ${otp}. It will expire in 3 minutes`
+        };
+
+        await transporter.sendMail(mailOptions);
 
         return 'OTP sent to your email. It is valid for 3 minutes';
     } catch (error) {
