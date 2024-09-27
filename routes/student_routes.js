@@ -13,6 +13,8 @@ import {
     signupSchema,
     signinSchame,
     updateStudentSchema,
+    forgotPasswordSchema,
+    resetPasswordSchema,
 } from "../validation/student.schema.js";
 import validate from "../middlewares/validation.js";
 import { v4 } from "uuid";
@@ -194,7 +196,66 @@ router.put(
     updatePhote
 )
 
-router.post("/students/forgot-password", forgotStudentPasswordHandler)
-router.post("/students/reset-password", resetStudentPasswordHandler)
+
+/**
+ * @swagger
+ * /students/forgot-password:
+ *  post:
+ *   summary: forgot password
+ *   description: forgot password for the student
+ *   requestBody:
+ *    content:
+ *      application/json:
+ *        schema:
+ *          type: object
+ *          properties:
+ *            email:
+ *              type: string
+ *   responses:
+ *      200:
+ *         content:
+ *             application/json:
+ *                schema:
+ *                   type: object
+ *                   properties:
+ *                     message:
+ *                      type: string
+ *      500:
+ *          description: Internal server error
+ */
+router.post("/students/forgot-password", validate(forgotPasswordSchema), forgotStudentPasswordHandler)
+
+
+/**
+ * @swagger
+ * /teachers/reset-password:
+ *  post:
+ *   summary: reset password
+ *   description: reset password for the student
+ *   requestBody:
+ *    content:
+ *      application/json:
+ *        schema:
+ *          type: object
+ *          properties:
+ *            email:
+ *              type: string
+ *            otp:
+ *              type: string
+ *            password:
+ *              type: string
+ *   responses:
+ *      200:
+ *         content:
+ *             application/json:
+ *                schema:
+ *                   type: object
+ *                   properties:
+ *                     message:
+ *                      type: string
+ *      500:
+ *          description: Internal server error
+ */
+router.post("/students/reset-password", validate(resetPasswordSchema), resetStudentPasswordHandler)
 
 export { router };

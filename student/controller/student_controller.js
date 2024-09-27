@@ -82,7 +82,7 @@ export const checkJwt = asyncWrapper(async (req, res, next) => {
 export const forgotStudentPasswordHandler = asyncWrapper(async (req, res, next) => {
     const email = req.body.email;
     try {
-        const message = await forgotStudentPassword(email);
+        const message = await forgotStudentPassword(email); 
         res.status(200).json({
             data: {
                 message,
