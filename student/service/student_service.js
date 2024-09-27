@@ -82,9 +82,7 @@ export async function forgotStudentPassword(email) {
         }
         await sgMail.send(message);
 
-        return {
-            message: 'OTP sent to your email. It is valid for 3 minutes'
-        };
+        return 'OTP sent to your email. It is valid for 3 minutes';
     } catch (error) {
         throw new appError('Error sending email', 500);
     }
@@ -112,7 +110,5 @@ export async function resetStudentPassword(body) {
     student.otp = undefined;
     await student.save();
 
-    return {
-        message: 'Password reset successfully'
-    };
+    return 'Password reset successfully';
 }

@@ -23,15 +23,17 @@ const TeacherSchema = new Schema(
         profilePicture: {
             type: String,
         },
+        otp: {
+            type: String,
+        }
     },
     { timestamps: true }
 );
 
 TeacherSchema.pre("save", async function (next) {
-    if (this.isModified("password") && !this.isNew) {
-        return next();
+    if (this.isModified("password")) {
+        this.hashedPassword = await bcrypt.hash(this.hashedPassword, 10);
     }
-    this.hashedPassword = await bcrypt.hash(this.hashedPassword, 8);
     next();
 });
 

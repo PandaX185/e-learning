@@ -1,5 +1,5 @@
 import express from "express";
-import { signIn, signUp } from "../teacher/controller/teacher_controller.js";
+import { signIn, signUp, forgotTeacherPasswordHandler, resetTeacherPasswordHandler } from "../teacher/controller/teacher_controller.js";
 import validate from "../middlewares/validation.js";
 import { LoginSchame, signupSchema } from "../validation/teacher.schema.js";
 
@@ -114,6 +114,10 @@ router.post("/teachers/signup", validate(signupSchema), signUp);
  *      500:
  *          description: Internal server error
  */
-router.post("/teacher/login", validate(LoginSchame), signIn);
+router.post("/teachers/login", validate(LoginSchame), signIn);
+
+
+router.post("/teachers/forgot-password", forgotTeacherPasswordHandler)
+router.post("/teachers/reset-password", resetTeacherPasswordHandler)
 
 export { router };
