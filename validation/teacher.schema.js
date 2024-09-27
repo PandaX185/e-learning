@@ -56,3 +56,26 @@ export const LoginSchame = new Joi.object({
             "string.empty": "Password is required",
         }),
 }).unknown(true);
+
+export const forgotPasswordSchema = new Joi.object({
+    email: Joi.string().required().email().messages({
+        "string.empty": "Email is required",
+        "string.email": "Email must be a valid email address"
+    }),
+})
+
+export const resetPasswordSchema = new Joi.object({
+    otp: Joi.string().required().length(6).messages({
+        "string.empty": "OTP is required",
+        "string.length": "OTP must be 6 characters"
+    }),
+    email: Joi.string().required().email().messages({
+        "string.empty": "Email is required",
+        "string.email": "Email must be a valid email address"
+    }),
+    password: Joi.string().required().pattern(new RegExp(/^(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,16}$/)).messages({
+        "string.pattern.base":
+            "Password must contain at least 8 characters, including a lowercase letter, a number, and a special character",
+        "string.empty": "Password is required",
+    }),
+})
