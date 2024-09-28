@@ -23,6 +23,9 @@ const TeacherSchema = new Schema(
         profilePicture: {
             type: String,
         },
+        otp: {
+            type: String,
+        }
     },
     { timestamps: true }
 );
@@ -34,6 +37,7 @@ TeacherSchema.pre("save", async function (next) {
     this.password = await bcrypt.hash(this.password, 8);
     next();
 });
+
 
 const Teacher = model("Teacher", TeacherSchema);
 
