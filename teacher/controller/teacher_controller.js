@@ -14,7 +14,7 @@ export const signUp = asyncWrapper(async (req, res, next) => {
 
     const result = await createTeacher(teacher);
     delete result._doc.hashedPassword;
-    return res.status(200).json({
+    return res.status(201).json({
         data: {
             result,
         },
@@ -22,7 +22,7 @@ export const signUp = asyncWrapper(async (req, res, next) => {
 });
 
 export const signIn = asyncWrapper(async (req, res, next) => {
-    const { Token, user } = await LoginTeacher(req.body, res, next);
+    const { Token, user } = await LoginTeacher(req.body);
     res.status(200).json({
         status: "success",
         data: {

@@ -14,14 +14,11 @@ export async function createTeacher(teacher) {
     return newTeacher;
 }
 
-export async function LoginTeacher(body, res, next) {
+export async function LoginTeacher(body) {
     const { email, password } = body;
-    const user = await Teacher.findOne({ email }).select("+hashedPassword");
-    if (!user) {
-        throw new appError("invaild email or password", 403);
-    }
 
-    if (!(await bcrypt.compare(password, user.hashedPassword))) {
+    const user = await Teacher.findOne({ email }).select("+password");
+    if (!user || !(await bcrypt.compare(password, user.password))) {
         throw new appError("invaild email or password", 401);
     }
 
