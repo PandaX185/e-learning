@@ -28,8 +28,6 @@ app.use("/api", teacherRouter);
 app.use(errorHandler);
 
 const port = process.env.PORT;
-const server = app.listen(port, () => {
+app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`);
 });
-
-export { app, server };

@@ -11,7 +11,7 @@ import {
 import verifyToken from "../middlewares/verifyToken.js";
 import {
     signupSchema,
-    signinSchema,
+    signinSchame,
     updateStudentSchema,
     forgotPasswordSchema,
     resetPasswordSchema,
@@ -148,7 +148,7 @@ router.post("/students/signup", validate(signupSchema), signUp);
  *      500:
  *          description: Internal server error
  */
-router.post("/students/login/:teacher", validate(signinSchema), login);
+router.post("/students/login/:teacher", validate(signinSchame), login);
 
 /**
  * @swagger
