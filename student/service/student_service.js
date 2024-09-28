@@ -18,7 +18,7 @@ export async function createStudent(student) {
             await existingStudent.save();
             return existingStudent;
         } else {
-            throw new appError('Student already exists', 400);
+            throw new appError('Student already exists', 409);
         }
     }
     const newStudent = await Student.create(student);
