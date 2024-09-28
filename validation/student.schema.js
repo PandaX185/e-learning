@@ -29,7 +29,7 @@ export const signupSchema = new Joi.object({
 
 }).unknown(true);
 
-export const signinSchame = new Joi.object({
+export const signinSchema = new Joi.object({
     email: Joi.string().required().email().messages({
         "string.empty": "Email is required",
         "string.email": "Email must be a valid email address"
