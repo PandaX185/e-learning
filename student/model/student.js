@@ -30,6 +30,9 @@ const studentSchema = new Schema(
         },
         profilePicture: {
             type: String
+        },
+        otp: {
+            type: String
         }
     },
     {
