@@ -1,19 +1,31 @@
-import request from 'supertest';
-import { app, server } from '../app';
+import supertest from 'supertest';
+import { createServer } from '../utils/server';
 import Student from '../student/model/student';
-import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import connection from '../config/db';
+import dotenv from 'dotenv';
 dotenv.config();
 
+const app = createServer();
+
 describe('Student Signup Endpoint', () => {
-    afterAll(async () => {
-        await mongoose.connection.close();
-        server.close();
+
+    beforeAll(async () => {
+        if (connection.readyState === 0) {
+            await mongoose.connect(process.env.MONGODB_URI, {
+                useNewUrlParser: true,
+                useUnifiedTopology: true,
+            });
+        }
     });
 
-    beforeEach(() => {
-        jest.clearAllMocks();
+    afterAll(async () => {
+        await mongoose.disconnect();
     });
+
+    afterEach(async () => {
+        await Student.deleteMany();
+    })
 
     it('should create a new student', async () => {
         const mockStudent = {
@@ -25,7 +37,7 @@ describe('Student Signup Endpoint', () => {
             teacherId: '60f1b0b3e1b3b40015f1f2b3',
         };
 
-        const response = await request(app)
+        const response = await supertest(app)
             .post('/api/students/signup')
             .send(mockStudent)
             .expect(201);
@@ -52,7 +64,7 @@ describe('Student Signup Endpoint', () => {
             teacherId: '60f1b0b3e1b3b40015f1f2b4',
         };
 
-        const response = await request(app)
+        const response = await supertest(app)
             .post('/api/students/signup')
             .send(mockStudent)
             .expect(201);
@@ -78,7 +90,7 @@ describe('Student Signup Endpoint', () => {
             teacherId: '60f1b0b3e1b3b40015f1f2b3',
         };
 
-        await request(app)
+        await supertest(app)
             .post('/api/students/signup')
             .send(mockStudent)
             .expect(400);
@@ -104,7 +116,7 @@ describe('Student Signup Endpoint', () => {
             teacherId: '60f1b0b3e1b3b40015f1f2b3',
         };
 
-        await request(app)
+        await supertest(app)
             .post('/api/students/signup')
             .send(mockStudent)
             .expect(409);

@@ -1,22 +1,31 @@
-import db from "../config/db.js";
-import server from "../app.js";
-import request from "supertest";
-import Teacher from "../teacher/model/teacher.js";
+import supertest from 'supertest';
+import { createServer } from '../utils/server';
+import mongoose from 'mongoose';
+import connection from '../config/db';
+import dotenv from 'dotenv';
+dotenv.config(); import Teacher from "../teacher/model/teacher.js";
 
-beforeAll(async () => {
-    await db.connect();
-});
-
-beforeEach(async () => {
-    await Teacher.deleteMany();
-});
-
-afterAll(async () => {
-    await server.close();
-    await db.close();
-});
+const app = createServer();
 
 describe("Teacher Signup", () => {
+
+    beforeAll(async () => {
+        if (connection.readyState === 0) {
+            await mongoose.connect(process.env.MONGODB_URI, {
+                useNewUrlParser: true,
+                useUnifiedTopology: true,
+            });
+        }
+    });
+
+    afterAll(async () => {
+        await mongoose.disconnect();
+    });
+
+    afterEach(async () => {
+        await Teacher.deleteMany();
+    })
+
     it("should return status code 201 and the teacher data on successful signup", async () => {
         const teacher = {
             firstName: "John",
@@ -25,7 +34,7 @@ describe("Teacher Signup", () => {
             password: "password@123",
         };
 
-        const response = await request(server)
+        const response = await supertest(app)
             .post("/api/teachers/signup")
             .send(teacher);
 
@@ -55,7 +64,7 @@ describe("Teacher Signup", () => {
 
         await Teacher.create(teacher);
 
-        const response = await request(server)
+        const response = await supertest(app)
             .post("/api/teachers/signup")
             .send(teacher);
 
@@ -72,7 +81,7 @@ describe("Teacher Signup", () => {
             password: "password123",
         };
 
-        const response = await request(server)
+        const response = await supertest(app)
             .post("/api/teachers/signup")
             .send(teacher);
 
@@ -94,7 +103,7 @@ describe("Teacher Login", () => {
 
         await Teacher.create(teacher);
 
-        const response = await request(server)
+        const response = await supertest(app)
             .post("/api/teacher/login")
             .send({ email: "john.doe@example.com", password: "password@123" });
 
@@ -117,7 +126,7 @@ describe("Teacher Login", () => {
         await Teacher.create(teacher);
 
 
-        const response = await request(server)
+        const response = await supertest(app)
             .post("/api/teacher/login")
             .send({ email: "wrong.email@example.com", password: "password@123" });
 
