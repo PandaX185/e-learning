@@ -10,7 +10,7 @@ dotenv.config();
 export async function createTeacher(teacher) {
     const existingTeacher = await Teacher.findOne({ email: teacher.email });
     if (existingTeacher) {
-        throw new appError("Teacher already exists", 400);
+        throw new appError("Teacher already exists", 409);
     }
 
     teacher.hashedPassword = teacher.password;
@@ -22,11 +22,11 @@ export async function LoginTeacher(body, res, next) {
     const { email, password } = body;
     const user = await Teacher.findOne({ email }).select("+hashedPassword");
     if (!user) {
-        throw new appError("invaild email or password", 403);
+        throw new appError("Invaild email or password", 403);
     }
 
     if (!(await bcrypt.compare(password, user.hashedPassword))) {
-        throw new appError("invaild email or password", 401);
+        throw new appError("Invaild email or password", 401);
     }
 
     delete user._doc.hashedPassword;

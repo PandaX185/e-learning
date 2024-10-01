@@ -11,13 +11,19 @@ export const signUp = asyncWrapper(async (req, res, next) => {
         profilePicture: process.env.DEFAULT_PFP_URL,
     };
 
-    const result = await createTeacher(teacher);
-    delete result._doc.hashedPassword;
-    return res.status(200).json({
-        data: {
-            result,
-        },
-    });
+    try {
+        const result = await createTeacher(teacher);
+        delete result._doc.hashedPassword;
+        return res.status(201).json({
+            data: {
+                result,
+            },
+        });
+    } catch (error) {
+        console.log(error);
+
+        return res.status(error.statusCode).json({ error: error.message });
+    }
 });
 
 export const signIn = asyncWrapper(async (req, res, next) => {
