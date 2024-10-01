@@ -3,9 +3,10 @@ import { createServer } from '../utils/server';
 import mongoose from 'mongoose';
 import connection from '../config/db';
 import bcrypt from 'bcrypt';
+import Teacher from "../teacher/model/teacher.js";
 import dotenv from 'dotenv';
 
-dotenv.config(); import Teacher from "../teacher/model/teacher.js";
+dotenv.config();
 
 const app = createServer();
 
