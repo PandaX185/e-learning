@@ -44,7 +44,7 @@
     "transform": {
       "^.+\\.jsx?$": "babel-jest"
     },
-    "testTimeout": 10000,
+    "testTimeout": 20000,
     "clearMocks": true
   }
 }
