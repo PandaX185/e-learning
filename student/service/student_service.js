@@ -30,12 +30,13 @@ export async function loginStudent(body, teacherId) {
         email: body.email,
         teachers: teacherId
     })
+
     if (!student || !body.password || !body.email) {
-        throw new appError('Invalid Email Or Password', 400);
+        throw new appError('Invalid Email Or Password', 401);
     }
     const isMatch = await bcrypt.compare(body.password, student.hashedPassword);
     if (!isMatch) {
-        throw new appError('Invalid Email Or Password');
+        throw new appError('Invalid Email Or Password', 401);
     }
     let accessToken = await generateToken({
         id: student._id,

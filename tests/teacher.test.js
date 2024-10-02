@@ -12,7 +12,6 @@ const app = createServer();
 
 
 describe("Teacher Operations", () => {
-
     beforeAll(async () => {
         if (connection.readyState === 0) {
             await mongoose.connect(process.env.MONGODB_URI);
@@ -130,6 +129,34 @@ describe("Teacher Operations", () => {
 
 
             expect(response.statusCode).toBe(403);
+        });
+    });
+
+    describe("Teacher forgot password", () => {
+        it("should return status code 200 and a message if the email is valid", async () => {
+            const teacher = {
+                firstName: 'John',
+                lastName: 'Doe',
+                email: 'john.doe@gmail.com',
+                hashedPassword: await bcrypt.hash("password@123", 8),
+            };
+            await Teacher.create(teacher);
+
+            const response = await supertest(app)
+                .post("/api/teachers/forgot-password")
+                .send({ email: teacher.email });
+
+            expect(response.statusCode).toBe(200);
+            expect(response.body.data.message).toBe("OTP sent to your email. It is valid for 3 minutes");
+        });
+
+        it("should return status code 404 if the email is not registered", async () => {
+            const response = await supertest(app)
+                .post("/api/teachers/forgot-password")
+                .send({ email: "john.doe@gmail.com" })
+
+            expect(response.statusCode).toBe(404);
+            expect(response.body.error).toBe("Teacher not registered");
         });
     });
 })

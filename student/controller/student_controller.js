@@ -36,14 +36,18 @@ export const signUp = asyncWrapper(async (req, res, next) => {
 });
 
 export const login = asyncWrapper(async (req, res, next) => {
-    const student = await loginStudent(req.body, req.params.teacher);
-    res.status(200).json({
-        status: "Success",
-        message: "Login successful",
-        data: {
-            ...student,
-        },
-    });
+    try {
+        const student = await loginStudent(req.body, req.params.teacher);
+        res.status(200).json({
+            status: "Success",
+            message: "Login successful",
+            data: {
+                ...student,
+            },
+        });
+    } catch (error) {
+        return res.status(error.statusCode).json({ error: error.message });
+    }
 });
 
 export const update = asyncWrapper(async (req, res, next) => {
