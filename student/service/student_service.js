@@ -5,6 +5,7 @@ import generateToken from "../../utils/generateToken.js";
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
+import { log } from "console";
 dotenv.config();
 
 export async function createStudent(student) {
@@ -29,13 +30,14 @@ export async function loginStudent(body, teacherId) {
     const student = await Student.findOne({
         email: body.email,
         teachers: teacherId
-    })
+    }).select('+hashedPassword');    
     if (!student || !body.password || !body.email) {
-        throw new appError('Invalid Email Or Password', 400);
+        log("hello");
+        throw new appError('Invalid Email Or Password', 401);
     }
     const isMatch = await bcrypt.compare(body.password, student.hashedPassword);
-    if (!isMatch) {
-        throw new appError('Invalid Email Or Password');
+    if (!isMatch) {        
+        throw new appError('Invalid Email Or Password', 401);
     }
     let accessToken = await generateToken({
         id: student._id,
@@ -43,7 +45,17 @@ export async function loginStudent(body, teacherId) {
         role: 'Student'
     })
     return {
-        student,
+        student:{
+            _id: student._id,
+            email: student.email,
+            firstName: student.firstName,
+            lastName: student.lastName,
+            grade: student.grade,
+            profilePicture: student.profilePicture,
+            teachers: student.teachers,
+            createdAt: student.createdAt,
+            updatedAt: student.updatedAt
+        },
         accessToken
     };
 }
