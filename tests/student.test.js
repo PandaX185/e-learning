@@ -127,27 +127,27 @@ describe('Student Operations', () => {
     });
 
     describe("Student Login", () => {
-        // it("should return status code 200 and the student data on successful login", async () => {
-        //     const student = {
-        //         firstName: 'John',
-        //         lastName: 'Doe',
-        //         email: 'john.doe@example.com',
-        //         grade: 10,
-        //         teachers: ['60f1b0b3e1b3b40015f1f2b3'],
-        //         hashedPassword: await bcrypt.hash("password@123", 8),
-        //     };
-        //     await Student.create(student);
+        it("should return status code 200 and the student data on successful login", async () => {
+            const student = {
+                firstName: 'John',
+                lastName: 'Doe',
+                email: 'john.doe@example.com',
+                grade: 10,
+                teachers: ['60f1b0b3e1b3b40015f1f2b3'],
+                hashedPassword: await bcrypt.hash("password@123", 8),
+            };
+            await Student.create(student);
 
-        //     const response = await supertest(app)
-        //         .post("/api/students/login/60f1b0b3e1b3b40015f1f2b3")
-        //         .send({ email: "john.doe@example.com", password: "password@123" });
+            const response = await supertest(app)
+                .post("/api/students/login/60f1b0b3e1b3b40015f1f2b3")
+                .send({ email: "john.doe@example.com", password: "password@123" });
 
 
-        //     expect(response.statusCode).toBe(200);
-        //     expect(response.body.data.user).toMatchObject({
-        //         email: student.email,
-        //     });
-        // });
+            expect(response.statusCode).toBe(200);
+            expect(response.body.data.student).toMatchObject({
+                email: student.email,
+            });
+        });
 
         it("should return status code 401 if email or password is incorrect", async () => {
             const student = {

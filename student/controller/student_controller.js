@@ -46,6 +46,8 @@ export const login = asyncWrapper(async (req, res, next) => {
             },
         });
     } catch (error) {
+        console.log(error);
+        
         return res.status(error.statusCode).json({ error: error.message });
     }
 });
