@@ -18,7 +18,6 @@ export const signUp = asyncWrapper(async (req, res, next) => {
         password,
         grade,
         teacherId,
-        teachers: [teacherId],
         profilePicture: process.env.DEFAULT_PFP_URL,
     };
 
@@ -27,7 +26,7 @@ export const signUp = asyncWrapper(async (req, res, next) => {
         delete result._doc.hashedPassword;
         return res.status(201).json({
             data: {
-                result,
+                ...result._doc,
             },
         });
     } catch (error) {
@@ -37,17 +36,14 @@ export const signUp = asyncWrapper(async (req, res, next) => {
 
 export const login = asyncWrapper(async (req, res, next) => {
     try {
-        const student = await loginStudent(req.body, req.params.teacher);
+        const result = await loginStudent(req.body);
+        delete result.student.hashedPassword;
         res.status(200).json({
-            status: "Success",
-            message: "Login successful",
             data: {
-                ...student,
+                ...result,
             },
         });
     } catch (error) {
-        console.log(error);
-        
         return res.status(error.statusCode).json({ error: error.message });
     }
 });
@@ -62,7 +58,7 @@ export const update = asyncWrapper(async (req, res, next) => {
     });
 });
 
-export const updatePhote = asyncWrapper(
+export const updatePhoto = asyncWrapper(
     async (req, res, next) => {
         const id = req.params.id;
         const student = await updateStudentPhoto(req.file, id);
@@ -79,9 +75,9 @@ export const checkJwt = asyncWrapper(async (req, res, next) => {
 });
 
 export const forgotStudentPasswordHandler = asyncWrapper(async (req, res, next) => {
-    const email = req.body.email;
+    const { email, teacherId } = req.body;
     try {
-        const message = await forgotStudentPassword(email);
+        const message = await forgotStudentPassword(email, teacherId);
         res.status(200).json({
             data: {
                 message,

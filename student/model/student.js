@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import mongoose, { Schema, model } from 'mongoose';
 
 const studentSchema = new Schema(
     {
@@ -12,7 +12,6 @@ const studentSchema = new Schema(
         },
         email: {
             type: String,
-            unique: true,
             required: true
         },
         hashedPassword: {
@@ -24,9 +23,9 @@ const studentSchema = new Schema(
             type: Number,
             required: true
         },
-        teachers: {
-            type: [Schema.Types.ObjectId],
-            ref: 'Teacher'
+        teacherId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Teacher',
         },
         profilePicture: {
             type: String
@@ -39,6 +38,8 @@ const studentSchema = new Schema(
         timestamps: true
     }
 );
+
+studentSchema.index({ email: 1, teacherId: 1 }, { unique: true });
 
 const Student = model('Student', studentSchema);
 

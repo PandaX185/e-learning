@@ -39,6 +39,9 @@ export const signinSchema = new Joi.object({
             "Password must contain at least 8 characters, including a lowercase letter, a number, and a special character",
         "string.empty": "Password is required",
     }),
+    teacherId: Joi.string().required().messages({
+        "string.empty": "Teacher ID is required",
+    })
 }).unknown(true);
 
 export const updateStudentSchema = new Joi.object({
@@ -65,6 +68,9 @@ export const forgotPasswordSchema = new Joi.object({
         "string.empty": "Email is required",
         "string.email": "Email must be a valid email address"
     }),
+    teacherId: Joi.string().required().messages({
+        "string.empty": "Teacher ID is required",
+    })
 })
 
 export const resetPasswordSchema = new Joi.object({

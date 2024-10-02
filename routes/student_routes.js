@@ -3,8 +3,7 @@ import {
     signUp,
     login,
     update,
-    checkJwt,
-    updatePhote,
+    updatePhoto,
     forgotStudentPasswordHandler,
     resetStudentPasswordHandler
 } from "../student/controller/student_controller.js";
@@ -94,10 +93,8 @@ const router = express.Router();
  *                    grade:
  *                      type: number
  *                      format: int32
- *                    teachers:
- *                      type: array
- *                      items:
- *                          type: string
+ *                    teacherId:
+ *                      type: string
  *                    profilePicture:
  *                      type: string
  *                      format: binary
@@ -116,17 +113,10 @@ router.post("/students/signup", validate(signupSchema), signUp);
 
 /**
  * @swagger
- * /students/login/{teacher}:
+ * /students/login:
  *  post:
  *   summary: Login a Student
  *   description: Login a student
- *   parameters:
- *     - in: path
- *       name: teacher
- *       required: true
- *       schema:
- *         type: string
- *       description: Teacher ID for the student
  *   requestBody:
  *    content:
  *      application/json:
@@ -135,10 +125,13 @@ router.post("/students/signup", validate(signupSchema), signUp);
  *          properties:
  *            email:
  *              type: string
+ *            teacherId:
+ *              type: string
  *            password:
  *              type: string
  *          required:
  *           - email
+ *           - teacherId
  *           - password
  *   responses:
  *      200:
@@ -148,17 +141,17 @@ router.post("/students/signup", validate(signupSchema), signUp);
  *      500:
  *          description: Internal server error
  */
-router.post("/students/login/:teacher", validate(signinSchema), login);
+router.post("/students/login", validate(signinSchema), login);
 
 /**
  * @swagger
- * /students/login/{student}:
+ * /students/update-student/{studentId}:
  *  put:
  *   summary: Update a Student
  *   description: Update a student
  *   parameters:
  *     - in: path
- *       name: student
+ *       name: studentId
  *       required: true
  *       schema:
  *         type: string
@@ -193,7 +186,7 @@ router.put(
     "/students/update-photo/:id",
     /* verifyToken, */
     upload.single('profilePicture'),
-    updatePhote
+    updatePhoto
 )
 
 
@@ -210,6 +203,8 @@ router.put(
  *          type: object
  *          properties:
  *            email:
+ *              type: string
+ *            teacherId:
  *              type: string
  *   responses:
  *      200:
