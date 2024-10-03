@@ -11,51 +11,36 @@ dotenv.config();
 export async function createStudent(student) {
     const hashedPassword = await bcrypt.hash(student.password, 0);
     student.hashedPassword = hashedPassword;
-    const existingStudent = await Student.findOne({ email: student.email });
+    const existingStudent = await Student.findOne({ email: student.email, teacherId: student.teacherId });
     if (existingStudent) {
-        if (!existingStudent.teachers.includes(student.teacherId)) {
-            existingStudent.teachers.push(student.teacherId);
-            existingStudent.updatedAt = Date.now();
-            await existingStudent.save();
-            return existingStudent;
-        } else {
-            throw new appError('Student already exists', 409);
-        }
+        throw new appError('Student already exists', 409);
     }
     const newStudent = await Student.create(student);
     return newStudent;
 }
 
-export async function loginStudent(body, teacherId) {
+export async function loginStudent(body) {
     const student = await Student.findOne({
         email: body.email,
-        teachers: teacherId
-    }).select('+hashedPassword');    
+        teacherId: body.teacherId
+    }).select('+hashedPassword');
+
     if (!student || !body.password || !body.email) {
-        log("hello");
         throw new appError('Invalid Email Or Password', 401);
     }
     const isMatch = await bcrypt.compare(body.password, student.hashedPassword);
-    if (!isMatch) {        
+    if (!isMatch) {
         throw new appError('Invalid Email Or Password', 401);
     }
     let accessToken = await generateToken({
         id: student._id,
         email: student.email,
-        role: 'Student'
+        role: 'Student',
+        teacherId: student.teacherId
     })
+
     return {
-        student:{
-            _id: student._id,
-            email: student.email,
-            firstName: student.firstName,
-            lastName: student.lastName,
-            grade: student.grade,
-            profilePicture: student.profilePicture,
-            teachers: student.teachers,
-            createdAt: student.createdAt,
-            updatedAt: student.updatedAt
-        },
+        student,
         accessToken
     };
 }
@@ -76,8 +61,8 @@ export async function updateStudentPhoto(file, id) {
     return updatedStudent;
 }
 
-export async function forgotStudentPassword(email) {
-    const existingStudent = await Student.findOne({ email });
+export async function forgotStudentPassword(email, teacherId) {
+    const existingStudent = await Student.findOne({ email, teacherId });
     if (!existingStudent) {
         throw new appError('Student not registered', 404);
     }
@@ -114,9 +99,9 @@ export async function forgotStudentPassword(email) {
 }
 
 export async function resetStudentPassword(body) {
-    const { email, otp, password } = body;
+    const { email, teacherId, otp, password } = body;
 
-    const student = await Student.findOne({ email });
+    const student = await Student.findOne({ email, teacherId });
     if (!student) {
         throw new appError('Student not registered', 404);
     }
