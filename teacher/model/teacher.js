@@ -15,6 +15,10 @@ const TeacherSchema = new Schema(
             type: String,
             required: true,
         },
+        subject:{
+            type: String,
+            required: true,
+        },
         hashedPassword: {
             type: String,
             required: true,
@@ -31,9 +35,8 @@ const TeacherSchema = new Schema(
 );
 
 TeacherSchema.pre("save", async function (next) {
-    if (this.isModified("password")) {
+    if (!this.isModified("hashedPassword")) return next();
         this.hashedPassword = await bcrypt.hash(this.hashedPassword, 10);
-    }
     next();
 });
 

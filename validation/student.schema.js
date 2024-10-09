@@ -87,5 +87,5 @@ export const resetPasswordSchema = new Joi.object({
             "Password must contain at least 8 characters, including a lowercase letter, a number, and a special character",
         "string.empty": "Password is required",
     }),
-})
+}).unknown(true);
 
