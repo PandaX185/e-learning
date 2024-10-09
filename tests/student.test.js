@@ -66,14 +66,11 @@ describe('Student Operations', () => {
 
             mockStudent.teacherId = '60f1b0b3e1b3b40015f1f2b3';
             mockStudent.password = 'Ppassword123@'
-
             const response = await supertest(app)
                 .post('/api/students/signup')
                 .send(mockStudent)
                 .expect(201);
-
             expect(response.body).toHaveProperty('data');
-
             expect(response.body.data.firstName).toBe(mockStudent.firstName);
             expect(response.body.data.lastName).toBe(mockStudent.lastName);
             expect(response.body.data.email).toBe(mockStudent.email);
@@ -190,8 +187,8 @@ describe('Student Operations', () => {
                     .post("/api/students/forgot-password")
                     .send({ email: "john.doe@gmail.com", teacherId: "60f1b0b3e1b3b40015f1f2b3" });
 
-                expect(response.statusCode).toBe(404);
-                expect(response.body.error).toBe("Student not registered");
+                expect(response.statusCode).toBe(404);                
+                expect(response.body.message).toBe("Student not registered");
             });
         });
     });

@@ -33,6 +33,7 @@ describe("Teacher Operations", () => {
                 lastName: "Doe",
                 email: "john.doe@example.com",
                 password: "password@123",
+                subject: "Math",
             };
 
             const response = await supertest(app)
@@ -60,18 +61,16 @@ describe("Teacher Operations", () => {
                 lastName: "Doe",
                 email: "john.doe@example.com",
                 password: "password@123",
+                subject: "Math",
             };
-
-
             await Teacher.create({ ...teacher, hashedPassword: teacher.password });
 
             const response = await supertest(app)
                 .post("/api/teachers/signup")
                 .send(teacher);
 
-
             expect(response.statusCode).toBe(409);
-            expect(response.body.error).toBe("Teacher already exists");
+            expect(response.body.message).toBe("Teacher already exists");
         });
 
         it("should return status code 400 if there is a validation error", async () => {
@@ -97,15 +96,14 @@ describe("Teacher Operations", () => {
                 firstName: "John",
                 lastName: "Doe",
                 email: "john.doe@example.com",
-                hashedPassword: await bcrypt.hash("password@123", 8),
+                hashedPassword: "password@123",
+                subject:'Math'
             };
-
             await Teacher.create(teacher);
 
             const response = await supertest(app)
                 .post("/api/teachers/login")
                 .send({ email: "john.doe@example.com", password: "password@123" });
-
 
             expect(response.statusCode).toBe(200);
             expect(response.body.data.user).toMatchObject({
@@ -119,6 +117,8 @@ describe("Teacher Operations", () => {
                 lastName: "Doe",
                 email: "john.doe@example.com",
                 hashedPassword: await bcrypt.hash("password@123", 8),
+                subject:'Math'
+
             };
 
             await Teacher.create(teacher);
@@ -139,6 +139,7 @@ describe("Teacher Operations", () => {
                 lastName: 'Doe',
                 email: 'john.doe@gmail.com',
                 hashedPassword: await bcrypt.hash("password@123", 8),
+                subject:'Math'
             };
             await Teacher.create(teacher);
 
@@ -156,7 +157,7 @@ describe("Teacher Operations", () => {
                 .send({ email: "john.doe@gmail.com" })
 
             expect(response.statusCode).toBe(404);
-            expect(response.body.error).toBe("Teacher not registered");
+            expect(response.body.message).toBe("Teacher not registered");
         });
     });
 })
