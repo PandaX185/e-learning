@@ -30,12 +30,15 @@ const storage = multer.diskStorage({
 });
 const fileFilter = (req, file, cb) => {
     const imageType = file.mimetype.split("/")[0];
-    const size = file.size;
-    if (imageType === "image" && size <= 50000) {
+    if (imageType === "image") {
         return cb(null, true);
-    } else return cb(new appError("unSupported File Type or exceed max size 5mb", 400), false);
+    } else {
+        return cb(new appError("unSupported File Type", 400), false)
+    };
 };
-const upload = multer({ storage: storage, fileFilter: fileFilter });
+const upload = multer({ storage: storage, fileFilter: fileFilter , limits: {
+    fileSize: 1024 * 1024 * 5 // 5 MB limit
+} });
 const router = express.Router();
 
 /**

@@ -53,7 +53,7 @@ export async function updateStudent(body, id) {
     return updatedStudent;
 }
 
-export async function updateStudentPhoto(file, id) {
+export async function updateStudentPhoto(file, id) {    
     const updatedStudent = await Student.findByIdAndUpdate(id, { profilePicture: file.path }, { new: true, runValidators: true });
     if (!updatedStudent) {
         throw new appError('Student not found', 404);
@@ -69,6 +69,8 @@ export async function forgotStudentPassword(email, teacherId) {
 
     try {
         const otp = crypto.randomInt(100000, 999999).toString();
+        console.log(otp);
+        
         existingStudent.otp = await bcrypt.hash(otp, 10);
         await existingStudent.save();
 

@@ -23,16 +23,15 @@ export async function LoginTeacher(body, res, next) {
     const user = await Teacher.findOne({ email }).select("+hashedPassword");
     if (!user) {
         throw new appError("Invaild email or password", 403);
-    }
-
+    }    
     if (!(await bcrypt.compare(password, user.hashedPassword))) {
         throw new appError("Invaild email or password", 401);
     }
 
     delete user._doc.hashedPassword;
-    const Token = await generateToken(user.id);
+    const accessToken = await generateToken(user.id);
     return {
-        Token,
+        accessToken,
         user,
     };
 }
@@ -44,10 +43,10 @@ export async function forgotTeacherPassword(email) {
     }
 
     try {
-        const otp = crypto.randomInt(100000, 999999).toString();
+        const otp = crypto.randomInt(100000, 999999).toString();        
+        console.log(otp);
         teacher.otp = await bcrypt.hash(otp, 10);
         await teacher.save();
-
         const transporter = nodemailer.createTransport({
             host: process.env.SMTP_HOST,
             port: process.env.SMTP_PORT,
@@ -69,7 +68,9 @@ export async function forgotTeacherPassword(email) {
         await transporter.sendMail(mailOptions);
         return 'OTP sent to your email. It is valid for 3 minutes';
     } catch (error) {
+        console.log(error);
         throw new appError('Error sending email', 500);
+        
     }
 }
 
