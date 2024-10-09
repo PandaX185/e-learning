@@ -9,7 +9,7 @@ import { log } from "console";
 dotenv.config();
 
 export async function createStudent(student) {
-    const hashedPassword = await bcrypt.hash(student.password, 0);
+    const hashedPassword = await bcrypt.hash(student.password, 10);
     student.hashedPassword = hashedPassword;
     const existingStudent = await Student.findOne({ email: student.email, teacherId: student.teacherId });
     if (existingStudent) {

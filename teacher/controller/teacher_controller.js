@@ -10,8 +10,6 @@ export const signUp = asyncWrapper(async (req, res, next) => {
         password,
         profilePicture: process.env.DEFAULT_PFP_URL,
     };
-
-    try {
         const result = await createTeacher(teacher);
         delete result._doc.hashedPassword;
         return res.status(201).json({
@@ -19,9 +17,6 @@ export const signUp = asyncWrapper(async (req, res, next) => {
                 result,
             },
         });
-    } catch (error) {
-        return res.status(error.statusCode).json({ error: error.message });
-    }
 });
 
 export const signIn = asyncWrapper(async (req, res, next) => {
@@ -37,27 +32,19 @@ export const signIn = asyncWrapper(async (req, res, next) => {
 
 export const forgotTeacherPasswordHandler = asyncWrapper(async (req, res, next) => {
     const email = req.body.email;
-    try {
         const message = await forgotTeacherPassword(email);
         res.status(200).json({
             data: {
                 message,
             },
         });
-    } catch (error) {
-        return res.status(error.statusCode).json({ error: error.message });
-    }
 });
 
 export const resetTeacherPasswordHandler = asyncWrapper(async (req, res, next) => {
-    try {
         const message = await resetTeacherPassword(req.body);
         res.status(200).json({
             data: {
                 message,
             },
         });
-    } catch (error) {
-        return res.status(error.statusCode).json({ error: error.message });
-    }
 });
