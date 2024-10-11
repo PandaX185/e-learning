@@ -9,7 +9,7 @@ import { log } from "console";
 dotenv.config();
 
 export async function createStudent(student) {
-    const hashedPassword = await bcrypt.hash(student.password, 0);
+    const hashedPassword = await bcrypt.hash(student.password, 10);
     student.hashedPassword = hashedPassword;
     const existingStudent = await Student.findOne({ email: student.email, teacherId: student.teacherId });
     if (existingStudent) {
@@ -53,7 +53,7 @@ export async function updateStudent(body, id) {
     return updatedStudent;
 }
 
-export async function updateStudentPhoto(file, id) {
+export async function updateStudentPhoto(file, id) {    
     const updatedStudent = await Student.findByIdAndUpdate(id, { profilePicture: file.path }, { new: true, runValidators: true });
     if (!updatedStudent) {
         throw new appError('Student not found', 404);
@@ -69,6 +69,8 @@ export async function forgotStudentPassword(email, teacherId) {
 
     try {
         const otp = crypto.randomInt(100000, 999999).toString();
+        console.log(otp);
+        
         existingStudent.otp = await bcrypt.hash(otp, 10);
         await existingStudent.save();
 
