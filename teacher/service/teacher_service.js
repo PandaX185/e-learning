@@ -48,12 +48,11 @@ export async function forgotTeacherPassword(email) {
         teacher.otp = await bcrypt.hash(otp, 10);
         await teacher.save();
         const transporter = nodemailer.createTransport({
-            host: process.env.SMTP_HOST,
-            port: process.env.SMTP_PORT,
+            service:'gmail',
             secure: true,
             auth: {
-                user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASS,
+                user: process.env.GMAIL_USER,
+                pass: process.env.GAMIL_PASS,
             },
         });
 
@@ -65,7 +64,14 @@ export async function forgotTeacherPassword(email) {
             html: `Your OTP is ${otp}. It will expire in 3 minutes`
         };
 
-        await transporter.sendMail(mailOptions);
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error sending email:', error);
+                throw new appError('Failed to send OTP email', 500);
+            } else {
+                console.log('Email sent:', info.response);
+            }
+        });
         return 'OTP sent to your email. It is valid for 3 minutes';
     } catch (error) {
         console.log(error);
