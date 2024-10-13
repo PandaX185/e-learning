@@ -75,27 +75,31 @@ export async function forgotStudentPassword(email, teacherId) {
         await existingStudent.save();
 
         const transporter = nodemailer.createTransport({
-            service:'gmail',
+            host: process.env.SMTP_HOST,
+            port: process.env.SMTP_PORT,
             secure: true,
             auth: {
-                user: process.env.GMAIL_USER,
-                pass: process.env.GAMIL_PASS,
+                user: process.env.SMTP_USER,
+                pass: process.env.SMTP_PASS,
             },
         });
 
         const mailOptions = {
-            from: '"E Learning" <no-reply-elms@zohomail.com>',
+            from: '"E Learning"<no-reply-elms@zohomail.com>',
             to: email,
             subject: 'Password Reset OTP',
             text: `Your OTP is ${otp}. It will expire in 3 minutes`,
             html: `Your OTP is ${otp}. It will expire in 3 minutes`
         };
+
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.error('Error sending email:', error);
                 throw new appError('Failed to send OTP email', 500);
             } else {
                 console.log('Email sent:', info.response);
+                throw new appError('Error sending email', 500);
+
             }
         });
         return 'OTP sent to your email. It is valid for 3 minutes';
