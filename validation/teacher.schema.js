@@ -20,6 +20,16 @@ export const signupSchema = new Joi.object({
                 "Last name must be less than or equal to 15 characters",
             "string.pattern.base": "Text Musn't Contain Specail Chars",
         }),
+    subject: Joi.string()
+        .required()
+        .max(30)
+        .pattern(new RegExp(/^[a-zA-Z0-9äöüÄÖÜ]*$/))
+        .messages({
+            "string.empty": "Subject is required",
+            "string.max":
+                "subject must be less than or equal to 30 characters",
+            "string.pattern.base": "Text Musn't Contain Specail Chars",
+        }),
     password: Joi.string()
         .required()
         .pattern(

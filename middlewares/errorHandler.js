@@ -54,8 +54,6 @@ const sendErrorDev = (error, res) => {
 
 const sendErrorProd = (error, res) => {
     if (error.isOperational === true) {
-        console.log(error);
-
         return res.status(error.statusCode).json({
             status: false,
             message: error.message,
@@ -70,14 +68,14 @@ const sendErrorProd = (error, res) => {
 
 export default (error, req, res, next) => {
     error.statusCode = error.statusCode || 500;
-    error.status = error.status || false;
+    error.status = error.status || false;    
     if (process.env.NODE_ENV === "dev") {
         sendErrorDev(error, res);
     } else if (
         process.env.NODE_ENV === "production" ||
         process.env.NODE_ENV === "test"
     ) {
-        let err = { ...error };
+        let err =  error ;
         if (err.code === 11000) {
             err = duplicateError(err);
         }

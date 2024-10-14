@@ -29,5 +29,8 @@ export function createServer() {
     server.use("/api", lessonRouter);
     server.use("/api", sectionRouter);
     server.use(errorHandler);
+    server.use("*", (req, res) => {
+        res.status(404).json({ message: "this resource is not available..." });
+    });
     return server;
 }
