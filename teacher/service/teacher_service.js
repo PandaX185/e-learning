@@ -65,7 +65,14 @@ export async function forgotTeacherPassword(email) {
             html: `Your OTP is ${otp}. It will expire in 3 minutes`
         };
 
-        await transporter.sendMail(mailOptions);
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error sending email:', error);
+                throw new appError('Failed to send OTP email', 500);
+            } else {
+                console.log('Email sent:', info.response);
+            }
+        });
         return 'OTP sent to your email. It is valid for 3 minutes';
     } catch (error) {
         console.log(error);
