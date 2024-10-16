@@ -1,6 +1,9 @@
 import express from "express";
 import { router as studentRouter } from "../routes/student_routes.js";
 import { router as teacherRouter } from "../routes/teacher_routes.js";
+import { router as courseRouter } from "../routes/course_routes.js";
+import { router as lessonRouter } from "../routes/lesson_routes.js";
+import { router as sectionRouter } from "../routes/section_routes.js";
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerSpec from "../config/swagger.js";
 import cors from "cors";
@@ -22,6 +25,9 @@ export function createServer() {
 
     server.use("/api", studentRouter);
     server.use("/api", teacherRouter);
+    server.use("/api", courseRouter);
+    server.use("/api", lessonRouter);
+    server.use("/api", sectionRouter);
     server.use(errorHandler);
     server.use("*", (req, res) => {
         res.status(404).json({ message: "this resource is not available..." });
